@@ -19,9 +19,9 @@
 </form>
 <?php
 if(isset($_POST['submit'])){
-    virification();
+    verification();
 }
-function virification(){
+function verification(){
     $name = nameVerified($_POST['name']);
     $email = mailVerified($_POST['email']);
     $password = passVerified($_POST['password']);
