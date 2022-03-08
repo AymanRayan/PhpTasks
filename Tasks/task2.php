@@ -33,3 +33,7 @@ if(isset($_POST['submision'])){
     printNextLetter($theLetter);
 }
 ?>
+<<<<<<< HEAD
+=======
+
+>>>>>>> e9d2ecda4241185b80428f10cf474d3ba1f2dd3e
