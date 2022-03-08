@@ -32,6 +32,9 @@ function printNextLetter($letter){
 if(isset($_POST['submision'])){
     printNextLetter($theLetter);
 }
+//note
+//nextchar = ++char 
+//as ASCII code 
 ?>
 <<<<<<< HEAD
 =======
