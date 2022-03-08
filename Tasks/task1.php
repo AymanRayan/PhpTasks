@@ -24,5 +24,4 @@ if($theConsumption > 150 ){
     echo "The Consumption must be positive number";
 }
 
-
 ?>
