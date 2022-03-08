@@ -33,24 +33,3 @@ if(isset($_POST['submision'])){
     printNextLetter($theLetter);
 }
 ?>
-
-
-
-
-
-
-
-
-
-
-<!-- 
-$caseSensitivity = strtoupper($theLetter);
-    echo $caseSensitivity;
-    echo ($theLetter == $caseSensitivity);
-    echo ($result);
-    if($theLetter == $caseSensitivity){
-        $theResult = strtoupper($result);
-        echo $theResult;
-    }else{
-        $theResult = $result;
-    } -->
