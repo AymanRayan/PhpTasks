@@ -21,6 +21,7 @@
 if(isset($_POST['submit'])){
     verification();
 }
+
 function verification(){
     $name = nameVerified($_POST['name']);
     $email = mailVerified($_POST['email']);
