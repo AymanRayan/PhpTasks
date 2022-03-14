@@ -1,38 +1,23 @@
 <?php
-session_start();
-$content=[];
-$content +=[ $_SESSION['Posts']];
-//print_r($_SESSION['Posts']);
-print_r($content);
-//convert data to json for the file
-$toJson = json_encode($content); 
-$addToFile = fopen('posts.txt','w') or die ('unable to open file');
-fwrite($addToFile,$toJson);
+require_once 'dbconnection.php';
 
-//read and get the data as object
-$readedData =fopen('posts.txt','r') or die ('unable to open file');
-$theJson=fread($readedData,filesize('posts.txt'));
-$toObject=json_decode($theJson);
+$sql = "select id ,title , article , url from blog";
 
-//print_r($toObject);
-//convert data from object to array
-$theContent=[];
-foreach($toObject as $k => $v){
-    $theContent +=[
-        $k => $v
-    ];
+$blogData = mysqli_query($opp,$sql);
+
+function deleteThePost ($id){
+    $deleteSql = "delete from blog where id=$id";
+    $del = mysqli_query($GLOBALS['opp'],$deleteSql);
+    if(!$del){
+    echo "error ".mysqli_error($GLOBALS['opp']);
 }
-//print_r($theContent);
-//echo $theContent['imgUrl'];
-
-if(isset($_POST['delete'])){
-    fclose($addToFile);
-    unlink("posts.txt");
-    session_destroy();
-    echo "data is deleted";
 }
+
 
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -45,29 +30,42 @@ if(isset($_POST['delete'])){
 
 </head>
 <body>
+    <?php 
+    while($data = mysqli_fetch_assoc($blogData)){
+    ?>
 <div class="container my-4">
 <h5><?php 
+echo $data['title'];
 //echo $_SESSION['Posts']['title'];
-echo $theContent['title'];
+//echo $theContent['title'];
     ?>
     </h5>
   <div>
     <p><?php
+    echo $data['article'];
      //echo $_SESSION['Posts']['article'];
-     echo $theContent['article'];
+     //echo $theContent['article'];
      ?></p>
     <img width=400px; height="300px"  src="./<?php
+    echo $data['url'];
      //echo $_SESSION['Posts']['imgUrl'];
-     echo $theContent['imgUrl'];
+     //echo $theContent['imgUrl'];
      ?>">
      </div>
      <div class="mt-2">
      <form method="post">
-    <button name="delete" class="btn btn-danger">Delete</button>
+    <button  name="delete" value="<?php echo $data['id'];?>" class="btn btn-danger">Delete</button>
     </form>
     </div>
 </div>
+<?php
+}
+if(isset($_POST['delete'])){
+    deleteThePost($_POST['delete']);
+}
 
+
+?>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

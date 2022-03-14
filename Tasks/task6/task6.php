@@ -1,8 +1,5 @@
 <?php
-session_start();
-// session_unset();
-// session_destroy();
-
+require_once 'dbconnection.php';
 //form data
     
     $errors = [];
@@ -13,6 +10,22 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $title =$_POST["Title"] ;
     $article =$_POST["Article"] ;
     $fileName = $_FILES['img']['name'];
+
+    if(empty($title)){
+        $GLOBALS['errors']['Title'] = "Required Field ";
+      }elseif(!ctype_alpha($title)){
+        $GLOBALS['errors']['Title'] = "The Title must contain alpha chars only";
+    }
+     
+
+    
+    if(empty($article)){
+        $GLOBALS['errors']['Article']  = "Required Field"; 
+      }elseif(strlen($article) < 10){
+        $GLOBALS['errors']['Article']  = "Article can't be less than 50 ch"; 
+    }
+
+
 
     if(!empty($fileName) && !isThereAProblem($GLOBALS['errors'])){
         $filetype = $_FILES['img']['type'];
@@ -35,31 +48,26 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $GLOBALS['errors']["img"] = "Required input"; 
     }
 
-    if(empty($title)){
-        $GLOBALS['errors']['Title'] = "Required Field ";
-      }elseif(!ctype_alpha($title)){
-        $GLOBALS['errors']['Title'] = "The Title must contain alpha chars only";
-    }
-     
-
-    if(empty($article)){
-        $GLOBALS['errors']['Article']  = "Required Field"; 
-      }elseif(strlen($article) < 10){
-        $GLOBALS['errors']['Article']  = "Article can't be less than 50 ch"; 
-    }
     
     printErrorMessage($GLOBALS['errors'],"Title");
     printErrorMessage($GLOBALS['errors'],"Article");
     printErrorMessage($GLOBALS['errors'],"img");
-    if(!isThereAProblem($GLOBALS['errors'])){
-        $GLOBALS['content']["title"] = $title;
-        $GLOBALS['content']["article"] = $article;
+    if(!isThereAProblem($GLOBALS['errors']) && isset($_POST['submit'])){
+        $url = $GLOBALS['content']['imgUrl'];
+        $sql="insert into blog (title,article,url) values ('$title','$article','$url')";
+        $insData=mysqli_query($opp,$sql);
+
+        if(!$insData){
+            echo 'Error Try Again '.mysqli_error($oop);
+        }
+ 
+ 
+        mysqli_close($opp);
+
     } 
 }
-
-print_r($content);
 $content +=[$content];
-$_SESSION['Posts'] = $content;
+
 function isThereAProblem(array $arr){
     $re=False;
     if(count($arr) > 0){
@@ -129,7 +137,7 @@ function printErrorMessage(array $err,$key){
             //printErrorMessage($errors,"img"); 
             ?>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" name="submit" class="btn btn-primary">Submit</button>
            <!-- <span style=" <?php 
             //if(isThereAProblem($errors)){
             //echo "visibility:hidden";
