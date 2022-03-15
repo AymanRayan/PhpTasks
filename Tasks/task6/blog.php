@@ -36,34 +36,37 @@ function deleteThePost ($id){
 <div class="container my-4">
 <h5><?php 
 echo $data['title'];
-//echo $_SESSION['Posts']['title'];
-//echo $theContent['title'];
     ?>
     </h5>
   <div>
     <p><?php
     echo $data['article'];
-     //echo $_SESSION['Posts']['article'];
-     //echo $theContent['article'];
      ?></p>
     <img width=400px; height="300px"  src="./<?php
     echo $data['url'];
-     //echo $_SESSION['Posts']['imgUrl'];
-     //echo $theContent['imgUrl'];
      ?>">
      </div>
      <div class="mt-2">
      <form method="post">
     <button  name="delete" value="<?php echo $data['id'];?>" class="btn btn-danger">Delete</button>
+    <button  name="edite" value="<?php echo $data['id'];?>" class="btn btn-warning">Edit</button>
     </form>
     </div>
 </div>
 <?php
 }
 if(isset($_POST['delete'])){
+    $id=$_POST['delete'];
+    $sql="select url from blog where id=$id";
+    $op = mysqli_query($opp,$sql);
+    $data= mysqli_fetch_assoc($op);
+    unlink($data['url']);
     deleteThePost($_POST['delete']);
 }
-
+if(isset($_POST['edite'])){
+    $id=$_POST['edite'];
+    header("location: edite.php?id=$id");
+}
 
 ?>
 
